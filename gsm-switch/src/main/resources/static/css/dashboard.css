@@ -1,0 +1,24 @@
+@charset "ISO-8859-1";
+
+div.switch-container {
+	color: red;
+	top: 50%;
+	transform: translateY(50%);
+	max-width: 235px;
+	min-width: 150px;
+	box-shadow: 0px 0px 6px #cebbbb;
+	padding: 24px 24px 24px 24px;
+	border-radius: 5px;
+}
+
+div.switch-row {
+	padding: 10px;
+}
+
+div.device-registration-form{
+	margin-top: 30px;
+}
+
+#deviceSerialNo{
+	min-width: 230px;
+}

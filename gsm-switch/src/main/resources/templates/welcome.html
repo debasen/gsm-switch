@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Welcome</title>
+<th:block th:include="/header :: header"></th:block>
+<link rel="stylesheet" type="text/css" th:href="@{/css/welcome.css}" />
+</head>
+<body>
+	<div class="content-body">
+	<div class="alert alert-success"
+			th:if="'success'==(${registrationComplete})">
+			<span><strong>Registration Successful! </strong><span
+				th:text="'Your login credential is sent to the Email Id: '+${emailId}"></span></span>
+		</div>
+		<div class="container form-container">
+			<form action="/j_spring_security_check" method="post">
+				<div th:if="${param.error}" class="alert alert-danger">Invalid
+					username and password.</div>
+				<div th:if="${logoutMsg}" class="alert alert-success">You
+					have been logged out.</div>
+				<div class="form-group">
+					<label for="emailId">Email Address:</label> <input type="email"
+						class="form-control" id="emailId" name="emailId" />
+				</div>
+				<div class="form-group">
+					<label for="password">Password:</label> <input type="password"
+						class="form-control" id="password" name="password" />
+				</div>
+				<div class="checkbox">
+					<span><label><input type="checkbox"
+							name="rememberMe" /> Remember me</label><a style="float: right" href="#">Forgot
+							Password?</a></span>
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+				<div class="login-form-footer">
+					<span>Not Registered? <a href="/sign-up">Create an Account</a></span>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

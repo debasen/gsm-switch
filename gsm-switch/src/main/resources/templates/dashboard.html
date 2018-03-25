@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Dashboard</title>
+<th:block th:include="/header :: header"></th:block>
+<link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}" />
+<script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+</head>
+<body>
+	<nav th:replace="top-navigation :: nav-bar"></nav>
+	<div class="content-body container">
+		<h1 th:text="'Welcome ' + ${session.userSessionDetails.firstName} + '!'">Welcome</h1>
+		<div class="device-registration-form" th:if="${noDevice}">
+		<div th:if="${registraionStatus}" class="alert alert-danger">
+		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).DEVICE_ALREADY_REGISTERED} == ${registraionStatus}">The Device is already registered. Please contact us with your purchase proof.</p>
+		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).INVALID_SERIAL_NO} == ${registraionStatus}">The serial no is invalid. Please try again.</p>
+		</div>
+			<form class="form-inline" action="/device-registration" method="post">
+					<label style="margin-right: 10px" for="deviceSerialNo">Serial No:</label>
+					<div class="input-group">
+					<input
+						class="form-control" id="deviceSerialNo" name="deviceSerialNo"
+						type="text" placeholder="Enter Device Serial Number."/> 
+						<div class="input-group-btn">
+						<input type="submit" value="Register"
+						class="btn btn-default" />
+						</div>
+				</div>
+			</form>
+		</div>
+		<div th:if="!${noDevice}" class="container switch-container">
+			<div class="row switch-row">
+				<div class="col col-xs-6">
+					<button th:class="'btn '+ ${relayColorMap.get('relay1')}"
+						data-switch-status="On" data-switch="relay" id="relay-1">Switch
+						1</button>
+				</div>
+				<div class="col col-xs-6">
+					<button th:class="'btn '+ ${relayColorMap.get('relay2')}"
+						data-switch-status="Off" data-switch="relay" id="relay-2">Switch
+						2</button>
+				</div>
+			</div>
+			<div class="row switch-row">
+				<div class="col col-xs-6">
+					<button th:class="'btn '+ ${relayColorMap.get('relay3')}"
+						data-switch="relay" id="relay-3">Switch 3</button>
+				</div>
+				<div class="col col-xs-6">
+					<button th:class="'btn '+ ${relayColorMap.get('relay4')}"
+						data-switch="relay" id="relay-4">Switch 4</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
