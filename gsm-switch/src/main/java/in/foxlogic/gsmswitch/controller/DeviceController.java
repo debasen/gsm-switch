@@ -18,7 +18,7 @@ public class DeviceController {
 
 	@PostMapping("/device-registration")
 	public ModelAndView registerDevice(@SessionAttribute UserSessionDetails userSessionDetails,
-			@RequestParam("deviceSerialNo") Long deviceSerialNo) {
+			@RequestParam("deviceSerialNo") String deviceSerialNo) {
 		String response = deviceService.registerDevice(userSessionDetails.getEmailId(), deviceSerialNo);
 		if (StringConstants.DEVICE_SUCCESSFULLY_REGISTERED.equals(response)) {
 			return new ModelAndView("redirect:/dashboard");

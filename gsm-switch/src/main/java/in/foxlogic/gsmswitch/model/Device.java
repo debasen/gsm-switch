@@ -32,6 +32,17 @@ public class Device {
 	private boolean relay3;
 	@Column(name = "RELAY4")
 	private boolean relay4;
+	@Column(name = "DEVICE_RELAY1")
+	private boolean deviceRelay1;
+	@Column(name = "DEVICE_RELAY2")
+	private boolean deviceRelay2;
+	@Column(name = "DEVICE_RELAY3")
+	private boolean deviceRelay3;
+	@Column(name = "DEVICE_RELAY4")
+	private boolean deviceRelay4;
+	@Column(name = "SECURITY_KEY")
+	private String securityKey;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "USER_EMAIL_ID")
 	User user;
@@ -100,12 +111,52 @@ public class Device {
 		this.relay4 = relay4;
 	}
 
+	public boolean isDeviceRelay1() {
+		return deviceRelay1;
+	}
+
+	public void setDeviceRelay1(boolean deviceRelay1) {
+		this.deviceRelay1 = deviceRelay1;
+	}
+
+	public boolean isDeviceRelay2() {
+		return deviceRelay2;
+	}
+
+	public void setDeviceRelay2(boolean deviceRelay2) {
+		this.deviceRelay2 = deviceRelay2;
+	}
+
+	public boolean isDeviceRelay3() {
+		return deviceRelay3;
+	}
+
+	public void setDeviceRelay3(boolean deviceRelay3) {
+		this.deviceRelay3 = deviceRelay3;
+	}
+
+	public boolean isDeviceRelay4() {
+		return deviceRelay4;
+	}
+
+	public void setDeviceRelay4(boolean deviceRelay4) {
+		this.deviceRelay4 = deviceRelay4;
+	}
+
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getSecurityKey() {
+		return securityKey;
+	}
+
+	public void setSecurityKey(String securityKey) {
+		this.securityKey = securityKey;
 	}
 
 }

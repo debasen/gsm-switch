@@ -11,9 +11,10 @@
 	<nav th:replace="top-navigation :: nav-bar"></nav>
 	<div class="content-body container">
 		<h1 th:text="'Welcome ' + ${session.userSessionDetails.firstName} + '!'">Welcome</h1>
+			<h4>Please enter your Device's Serial Number to get started.</h4>
 		<div class="device-registration-form" th:if="${noDevice}">
 		<div th:if="${registraionStatus}" class="alert alert-danger">
-		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).DEVICE_ALREADY_REGISTERED} == ${registraionStatus}">The Device is already registered. Please contact us with your purchase proof.</p>
+		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).DEVICE_ALREADY_REGISTERED} == ${registraionStatus}">The Device is already registered to a different user. Please contact us with your purchase proof.</p>
 		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).INVALID_SERIAL_NO} == ${registraionStatus}">The serial no is invalid. Please try again.</p>
 		</div>
 			<form class="form-inline" action="/device-registration" method="post">
@@ -21,7 +22,7 @@
 					<div class="input-group">
 					<input
 						class="form-control" id="deviceSerialNo" name="deviceSerialNo"
-						type="text" placeholder="Enter Device Serial Number."/> 
+						type="number" placeholder="Enter Device Serial Number."/> 
 						<div class="input-group-btn">
 						<input type="submit" value="Register"
 						class="btn btn-default" />

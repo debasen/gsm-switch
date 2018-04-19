@@ -2,6 +2,7 @@ package in.foxlogic.gsmswitch.controller;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,9 @@ public class UserController {
 		if (device == null) {
 			modelAndView.addObject("noDevice", true);
 		} else {
+			if (StringUtils.isBlank(device.getSecurityKey())) {
+				userService.setSecurityKey(user);
+			}
 			BeanUtils.copyProperties(device, deviceSessionDetails);
 			deviceSessionDetails.setUserEmailId(emailId);
 			modelAndView.addObject("deviceSessionDetails", deviceSessionDetails);
@@ -60,16 +64,12 @@ public class UserController {
 
 	@GetMapping("/login")
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
-
 		ModelAndView modelAndView = new ModelAndView();
 		if (error != null) {
 			modelAndView.addObject("error", "Invalid username or password!");
 		}
-
 		modelAndView.setViewName("welcome");
-
 		return modelAndView;
-
 	}
 
 	@GetMapping("/sign-up")
@@ -93,4 +93,15 @@ public class UserController {
 		return modelAndView;
 	}
 
+	@PostMapping("/forgot-password-processor")
+	public ModelAndView processForgotPassword(@RequestParam("forgotPassEmailId") String emailId) {
+		boolean isReset = userService.processForgotPassword(emailId);
+		String forgotPasswordMessage = isReset ? "Password Sent. Please check your email id for new password."
+				: "No account exist with email id: " + emailId;
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("isReset", isReset);
+		modelAndView.addObject("forgotPasswordMessage", forgotPasswordMessage);
+		modelAndView.setViewName("welcome");
+		return modelAndView;
+	}
 }

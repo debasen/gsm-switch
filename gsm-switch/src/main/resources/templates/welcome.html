@@ -8,7 +8,13 @@
 </head>
 <body>
 	<div class="content-body">
-	<div class="alert alert-success"
+		<div class="alert alert-success" th:if="${isReset}==true">
+			<span th:text="${forgotPasswordMessage}"></span>
+		</div>
+		<div class="alert alert-danger" th:if="${isReset}==false">
+			<span th:text="${forgotPasswordMessage}"></span>
+		</div>
+		<div class="alert alert-success"
 			th:if="'success'==(${registrationComplete})">
 			<span><strong>Registration Successful! </strong><span
 				th:text="'Your login credential is sent to the Email Id: '+${emailId}"></span></span>
@@ -17,8 +23,8 @@
 			<form action="/j_spring_security_check" method="post">
 				<div th:if="${param.error}" class="alert alert-danger">Invalid
 					username and password.</div>
-				<div th:if="${logoutMsg}" class="alert alert-success">You
-					have been logged out.</div>
+				<div th:if="${logoutMsg}" class="alert alert-success">You have
+					been logged out.</div>
 				<div class="form-group">
 					<label for="emailId">Email Address:</label> <input type="email"
 						class="form-control" id="emailId" name="emailId" />
@@ -29,14 +35,41 @@
 				</div>
 				<div class="checkbox">
 					<span><label><input type="checkbox"
-							name="rememberMe" /> Remember me</label><a style="float: right" href="#">Forgot
+							name="rememberMe" /> Remember me</label><a style="float: right" href="#"
+						data-toggle="modal" data-target="#forgotPasswordModal">Forgot
 							Password?</a></span>
 				</div>
-				<button type="submit" class="btn btn-default">Submit</button>
+				<button type="submit" class="btn btn-default">Login</button>
 				<div class="login-form-footer">
-					<span>Not Registered? <a href="/sign-up">Create an Account</a></span>
+					<span>Not Registered? <a href="/sign-up">Create an
+							Account</a></span>
 				</div>
 			</form>
+		</div>
+	</div>
+	<div id="forgotPasswordModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Forgot Password</h4>
+				</div>
+				<div class="modal-body">
+					<p>Please enter your email id to receive password.</p>
+					<form action="/forgot-password-processor" method="post">
+						<div class="form-group">
+							<label>Email Id:</label> <input class="form-control"
+								id="forgotPassEmailId" name="forgotPassEmailId" type="email"
+								placeholder="Enter your Email Id" />
+						</div>
+						<input class="btn btn-default" type="submit" value="Submit" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

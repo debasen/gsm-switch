@@ -13,9 +13,8 @@ import javax.mail.internet.MimeMessage;
 public class EmailUtil {
 	private static String from = "deb.sensonic@gmail.com";
 	private static String password = "Kolkata@1";
-	private static String subject = "Fox Logic- Registration Successful";
 
-	public static void sendMail(String to, String msg) {
+	public static void sendMail(String to, String subject, String msg) {
 		// Get properties object
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
@@ -37,11 +36,11 @@ public class EmailUtil {
 			message.setContent(msg, "text/html; charset=utf-8");
 			// send message
 			Transport.send(message);
-			//System.out.println("message sent successfully");
+			// System.out.println("message sent successfully");
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
 
 	}
-	
+
 }

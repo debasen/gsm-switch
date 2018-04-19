@@ -34,7 +34,8 @@ public class LoginSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/welcome", "/sign-up").permitAll();
+		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/welcome", "/sign-up", "/server-relay-state")
+				.permitAll();
 		http.authorizeRequests().antMatchers("/dashboard").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 				.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and().csrf().disable();
 		// Enable h2 console login

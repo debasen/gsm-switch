@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "USER_DETAIL")
+@Table(name = "USER_DETAIL", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_NAME", "EMAIL_ID" }))
 public class User {
 
 	@Id
