@@ -10,49 +10,55 @@
 <body>
 	<nav th:replace="top-navigation :: nav-bar"></nav>
 	<div class="content-body container">
-		<h1 th:text="'Welcome ' + ${session.userSessionDetails.firstName} + '!'">Welcome</h1>
-			<h4>Please enter your Device's Serial Number to get started.</h4>
+		<h1
+			th:text="'Welcome ' + ${session.userSessionDetails.firstName} + '!'">Welcome</h1>
 		<div class="device-registration-form" th:if="${noDevice}">
-		<div th:if="${registraionStatus}" class="alert alert-danger">
-		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).DEVICE_ALREADY_REGISTERED} == ${registraionStatus}">The Device is already registered to a different user. Please contact us with your purchase proof.</p>
-		<p th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).INVALID_SERIAL_NO} == ${registraionStatus}">The serial no is invalid. Please try again.</p>
-		</div>
+			<h4>Please enter your Device's Serial Number to get started.</h4>
+			<div th:if="${registraionStatus}" class="alert alert-danger">
+				<p
+					th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).DEVICE_ALREADY_REGISTERED} == ${registraionStatus}">The
+					Device is already registered to a different user. Please contact us
+					with your purchase proof.</p>
+				<p
+					th:if="${T(in.foxlogic.gsmswitch.util.StringConstants).INVALID_SERIAL_NO} == ${registraionStatus}">The
+					serial no is invalid. Please try again.</p>
+			</div>
 			<form class="form-inline" action="/device-registration" method="post">
-					<label style="margin-right: 10px" for="deviceSerialNo">Serial No:</label>
-					<div class="input-group">
-					<input
-						class="form-control" id="deviceSerialNo" name="deviceSerialNo"
-						type="number" placeholder="Enter Device Serial Number."/> 
-						<div class="input-group-btn">
-						<input type="submit" value="Register"
-						class="btn btn-default" />
-						</div>
+				<label style="margin-right: 10px" for="deviceSerialNo">Serial
+					No:</label>
+				<div class="input-group">
+					<input class="form-control" id="deviceSerialNo"
+						name="deviceSerialNo" type="number"
+						placeholder="Enter Device Serial Number." />
+					<div class="input-group-btn">
+						<input type="submit" value="Register" class="btn btn-default" />
+					</div>
 				</div>
 			</form>
 		</div>
 		<div th:if="!${noDevice}" class="container switch-container">
-			<div class="row switch-row">
-				<div class="col col-xs-6">
-					<button th:class="'btn '+ ${relayColorMap.get('relay1')}"
-						data-switch-status="On" data-switch="relay" id="relay-1">Switch
-						1</button>
+			<div class="row">
+				<div class="col-xs-4 left-panel">
+					<h4>Device Details</h4>
+					<ul>
+						<li>Model: Tesla</li>
+						<li>Model Number: T-12321</li>
+						<li>Serial Number: 12321312</li>
+					</ul>
 				</div>
-				<div class="col col-xs-6">
-					<button th:class="'btn '+ ${relayColorMap.get('relay2')}"
-						data-switch-status="Off" data-switch="relay" id="relay-2">Switch
-						2</button>
+				<div class="col-xs-4 center-panel">
+				<button class="btn btn-default power-btn"><i class="glyphicon glyphicon-off power-btn-icon"></i></button>
+				</div>
+				<div class="col-xs-4  right-panel">
+				<h4>Sensor Details</h4>
+				<ul>
+						<li>10000000021321: KTPM</li>
+						<li>21321312: YO</li>
+						<li>917689165: SOME</li>
+					</ul>
 				</div>
 			</div>
-			<div class="row switch-row">
-				<div class="col col-xs-6">
-					<button th:class="'btn '+ ${relayColorMap.get('relay3')}"
-						data-switch="relay" id="relay-3">Switch 3</button>
-				</div>
-				<div class="col col-xs-6">
-					<button th:class="'btn '+ ${relayColorMap.get('relay4')}"
-						data-switch="relay" id="relay-4">Switch 4</button>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 </body>

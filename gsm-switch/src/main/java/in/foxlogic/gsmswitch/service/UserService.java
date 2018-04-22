@@ -60,7 +60,6 @@ public class UserService {
 		String newPassword = PasswordUtil.generatePassword();
 		user.setPassword(newPassword);
 		userRepository.save(user);
-		setSecurityKey(user);
 		String message = "<html><body><h1>Dear " + user.getFirstName()
 				+ "</h1></br></br><p>Your password is reset successfully. Please use the following credentials to Login:</p></br></br>"
 				+ "<p><b>Email: </b>" + user.getEmailId() + "</p></br>" + "<p><b>Password: </b>" + newPassword
@@ -69,11 +68,9 @@ public class UserService {
 		return true;
 	}
 
-	public void setSecurityKey(User user) {
-		Device device = user.getDevice();
-		if (device != null) {
-			String password = user.getPassword();
-			String securityKey = SecurityUtil.generateSecureKey(user.getEmailId(), password);
+	public void setSecurityKey(Device device) {
+		if (device.getUser() != null) {
+			String securityKey = SecurityUtil.generateSecureKey(device.getSerialNumber());
 			device.setSecurityKey(securityKey);
 			deviceRepository.save(device);
 		}

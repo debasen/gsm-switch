@@ -10,7 +10,7 @@ public class SecurityUtilTest {
 
 	@Test
 	public void testSecureKeyGeneration() {
-		assertEquals("bbca65bc5bef245a0c15be37ad281eeb553b8f00",
-				SecurityUtil.generateSecureKey("deb.sen93@gmail.com", "password"));
+
+		assertEquals("acee9", SecurityUtil.generateSecureKey(312313L));
 	}
 }

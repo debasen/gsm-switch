@@ -12,7 +12,7 @@ import in.foxlogic.gsmswitch.customexception.InvalidSerialNumberException;
 import in.foxlogic.gsmswitch.dao.DeviceRepository;
 import in.foxlogic.gsmswitch.dao.UserRepository;
 import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
-import in.foxlogic.gsmswitch.dto.ServerRelayDetailsResponseDto;
+import in.foxlogic.gsmswitch.dto.ServerRelayDetailsRequestDto;
 import in.foxlogic.gsmswitch.model.Device;
 import in.foxlogic.gsmswitch.model.User;
 import in.foxlogic.gsmswitch.util.StringConstants;
@@ -37,25 +37,10 @@ public class DeviceService {
 		return user.getDevice();
 	}
 
-	public boolean operateSwitch(DeviceSessionDetails deviceSessionDetails, String relayId) {
+	public boolean operateSwitch(DeviceSessionDetails deviceSessionDetails) {
 		boolean relayNewStatus = false;
 		Device device = deviceRepository.findBySerialNumber(deviceSessionDetails.getSerialNumber());
-		switch (relayId) {
-		case StringConstants.RELAY_BEAN_ID1:
-			device.setRelay1(relayNewStatus = !deviceSessionDetails.isRelay1());
-			break;
-		case StringConstants.RELAY_BEAN_ID2:
-			device.setRelay2(relayNewStatus = !deviceSessionDetails.isRelay2());
-			break;
-		case StringConstants.RELAY_BEAN_ID3:
-			device.setRelay3(relayNewStatus = !deviceSessionDetails.isRelay3());
-			break;
-		case StringConstants.RELAY_BEAN_ID4:
-			device.setRelay4(relayNewStatus = !deviceSessionDetails.isRelay4());
-			break;
-		default:
-			break;
-		}
+		device.setRelay(relayNewStatus = !deviceSessionDetails.isRelay());
 		deviceRepository.save(device);
 		BeanUtils.copyProperties(device, deviceSessionDetails);
 		return relayNewStatus;
@@ -76,15 +61,17 @@ public class DeviceService {
 		} else {
 			User user = userRepository.findOne(emailId);
 			device.setUser(user);
-			userService.setSecurityKey(user);
+			userService.setSecurityKey(device);
 			deviceRepository.save(device);
 			return StringConstants.DEVICE_SUCCESSFULLY_REGISTERED;
 		}
 	}
 
-	public ServerRelayDetailsResponseDto sendServerSideRelayDetails(Long serialNumber, String securityKey)
+	public String sendServerSideRelayDetails(ServerRelayDetailsRequestDto serverRelayDetailsRequestDto)
 			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException {
-
+		Long serialNumber = serverRelayDetailsRequestDto.getSerialNumber();
+		String securityKey = serverRelayDetailsRequestDto.getSecurityKey();
+		int iterationIndex = serverRelayDetailsRequestDto.getIterationIndex();
 		Device device = deviceRepository.findBySerialNumber(serialNumber);
 		// If no device exist with the serial number
 		if (device == null) {
@@ -96,14 +83,15 @@ public class DeviceService {
 		}
 		// If security key does not match
 		else if (!device.getSecurityKey().equals(securityKey)) {
-			throw new AuthenticationException("Security Key does not match. Update Password on device/portal");
+			throw new AuthenticationException("Security Key does not match. Contact Admin.");
 
 		}
 		// If everything goes well
 		else {
-			ServerRelayDetailsResponseDto serverRelayDetailsResponseDto = new ServerRelayDetailsResponseDto();
-			BeanUtils.copyProperties(device, serverRelayDetailsResponseDto);
-			return serverRelayDetailsResponseDto;
+			String relayStatus = device.isRelay() ? "On" : "Off";
+			int registerAddress = device.getSensorList().get(iterationIndex).getAddress();
+			String response = "Resp:" + relayStatus + "," + registerAddress;
+			return response;
 		}
 	}
 

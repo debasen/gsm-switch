@@ -1,24 +1,32 @@
 package in.foxlogic.gsmswitch.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class ServerRelayDetailsRequestDto {
 	@NotNull
-	@Pattern(regexp = "[0-9]+", message = "Serial Number Must be numeric")
-	private String serialNumber;
+	private Long serialNumber;
 	@NotNull
 	private String securityKey;
+	@NotNull
+	private int iterationIndex;
 
-	public String getSerialNumber() {
+	public Long getSerialNumber() {
 		return serialNumber;
 	}
 
-	public void setSerialNumber(String serialNumber) {
+	public void setSerialNumber(Long serialNumber) {
 		this.serialNumber = serialNumber;
+	}
+
+	public int getIterationIndex() {
+		return iterationIndex;
+	}
+
+	public void setIterationIndex(int iterationIndex) {
+		this.iterationIndex = iterationIndex;
 	}
 
 	public String getSecurityKey() {

@@ -48,9 +48,6 @@ public class UserController {
 		if (device == null) {
 			modelAndView.addObject("noDevice", true);
 		} else {
-			if (StringUtils.isBlank(device.getSecurityKey())) {
-				userService.setSecurityKey(user);
-			}
 			BeanUtils.copyProperties(device, deviceSessionDetails);
 			deviceSessionDetails.setUserEmailId(emailId);
 			modelAndView.addObject("deviceSessionDetails", deviceSessionDetails);
