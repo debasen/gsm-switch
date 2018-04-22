@@ -90,7 +90,7 @@ public class DeviceService {
 		else {
 			String relayStatus = device.isRelay() ? "On" : "Off";
 			int registerAddress = device.getSensorList().get(iterationIndex).getAddress();
-			String response = "Resp:" + relayStatus + "," + registerAddress;
+			String response = "<" + relayStatus + "," + registerAddress+">";
 			return response;
 		}
 	}
