@@ -3,6 +3,7 @@ package in.foxlogic.gsmswitch.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -10,30 +11,53 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import in.foxlogic.gsmswitch.customexception.AuthenticationException;
 import in.foxlogic.gsmswitch.customexception.DeviceNotRegisteredException;
 import in.foxlogic.gsmswitch.customexception.InvalidSerialNumberException;
+import in.foxlogic.gsmswitch.dto.DeviceStatusRequestDto;
 import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
+import in.foxlogic.gsmswitch.dto.RelayOperationResponse;
 import in.foxlogic.gsmswitch.dto.ServerRelayDetailsRequestDto;
 import in.foxlogic.gsmswitch.service.DeviceService;
-import in.foxlogic.gsmswitch.util.StringConstants;
+import in.foxlogic.gsmswitch.util.RelayUtil;
 
 @RestController
 public class DeviceRestController {
 	@Autowired
 	private DeviceService deviceService;
 
-	@PostMapping("/relay-handler")
-	public String operateRelay(@SessionAttribute("deviceSessionDetails") DeviceSessionDetails deviceSessionDetails) {
-		boolean relayNewStatus = deviceService.operateSwitch(deviceSessionDetails);
-		String responseColor = relayNewStatus ? StringConstants.BOOTSTRAP_BOTTON_COLOR_SECCESS
-				: StringConstants.BOOTSTRAP_BOTTON_COLOR_DEFAULT;
-		return responseColor;
+	@PostMapping("/operate-relay")
+	public RelayOperationResponse operateRelay(
+			@SessionAttribute("deviceSessionDetails") DeviceSessionDetails deviceSessionDetails, boolean relayState) {
+		deviceService.operateSwitch(deviceSessionDetails, relayState);
+		String responseColor = RelayUtil.getColorValue(deviceSessionDetails);
+		RelayOperationResponse relayOperationResponse = new RelayOperationResponse();
+		relayOperationResponse.setButtonColor(responseColor);
+		relayOperationResponse.setRelayStatus(deviceSessionDetails.isRelay());
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+		}
+		return relayOperationResponse;
 	}
 
-	@PostMapping("/fetch-commands")
-	public String sendServerSideRelayDetails(
-			@Valid ServerRelayDetailsRequestDto serverRelayDetailsRequestDto)
+	@PostMapping("/ftchCmnds")
+	public String sendServerSideRelayDetails(@Valid ServerRelayDetailsRequestDto serverRelayDetailsRequestDto)
 			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException {
 		return deviceService.sendServerSideRelayDetails(serverRelayDetailsRequestDto);
 
 	}
-	
+
+	@PostMapping("/putStats")
+	public String getDeviceSideRelayDetails(@Valid DeviceStatusRequestDto deviceStatusRequestDto)
+			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException {
+		return deviceService.getDeviceStatus(deviceStatusRequestDto);
+
+	}
+
+	@GetMapping("/poll-server")
+	public DeviceSessionDetails pollServer(
+			@SessionAttribute("deviceSessionDetails") DeviceSessionDetails deviceSessionDetails) {
+		deviceService.fetchDeviceStatus(deviceSessionDetails);
+		return deviceSessionDetails;
+
+	}
+
 }

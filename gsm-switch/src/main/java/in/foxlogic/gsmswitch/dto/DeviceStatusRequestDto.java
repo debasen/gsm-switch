@@ -2,16 +2,16 @@ package in.foxlogic.gsmswitch.dto;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Component;
+public class DeviceStatusRequestDto {
 
-@Component
-public class ServerRelayDetailsRequestDto {
 	@NotNull
 	private Long sNo;
 	@NotNull
 	private String secKy;
 	@NotNull
-	private int lIndx;
+	private boolean rly;
+	@NotNull
+	private boolean frly;
 
 	public Long getsNo() {
 		return sNo;
@@ -29,12 +29,20 @@ public class ServerRelayDetailsRequestDto {
 		this.secKy = secKy;
 	}
 
-	public int getlIndx() {
-		return lIndx;
+	public boolean isRly() {
+		return rly;
 	}
 
-	public void setlIndx(int lIndx) {
-		this.lIndx = lIndx;
+	public void setRly(boolean rly) {
+		this.rly = rly;
+	}
+
+	public boolean isFrly() {
+		return frly;
+	}
+
+	public void setFrly(boolean frly) {
+		this.frly = frly;
 	}
 
 }

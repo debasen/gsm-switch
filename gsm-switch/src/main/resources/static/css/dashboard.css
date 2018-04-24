@@ -1,5 +1,9 @@
 @charset "ISO-8859-1";
 
+.navbar{
+	border-radius: 0px;
+}
+
 div.switch-container {
 	top: 50%;
 	transform: translateY(50%);

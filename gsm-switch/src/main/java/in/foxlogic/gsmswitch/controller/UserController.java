@@ -51,7 +51,7 @@ public class UserController {
 			BeanUtils.copyProperties(device, deviceSessionDetails);
 			deviceSessionDetails.setUserEmailId(emailId);
 			modelAndView.addObject("deviceSessionDetails", deviceSessionDetails);
-			modelAndView.addObject("relayColorMap", RelayUtil.prepareRelayColorMap(deviceSessionDetails));
+			modelAndView.addObject("relayColor", RelayUtil.getColorValue(deviceSessionDetails));
 		}
 		BeanUtils.copyProperties(user, userSessionDetails);
 		modelAndView.addObject("userSessionDetails", userSessionDetails);
