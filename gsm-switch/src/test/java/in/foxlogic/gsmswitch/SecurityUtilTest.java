@@ -11,6 +11,6 @@ public class SecurityUtilTest {
 	@Test
 	public void testSecureKeyGeneration() {
 
-		assertEquals("acee9", SecurityUtil.generateSecureKey(312313L));
+		assertEquals("3a3d5", SecurityUtil.generateSecureKey(312315L));
 	}
 }

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import in.foxlogic.gsmswitch.dto.UserSessionDetails;
 import in.foxlogic.gsmswitch.service.DeviceService;
-import in.foxlogic.gsmswitch.util.StringConstants;
+import in.foxlogic.gsmswitch.util.Constants;
 
 @Controller
 public class DeviceController {
@@ -20,7 +20,7 @@ public class DeviceController {
 	public ModelAndView registerDevice(@SessionAttribute UserSessionDetails userSessionDetails,
 			@RequestParam("deviceSerialNo") String deviceSerialNo) {
 		String response = deviceService.registerDevice(userSessionDetails.getEmailId(), deviceSerialNo);
-		if (StringConstants.DEVICE_SUCCESSFULLY_REGISTERED.equals(response)) {
+		if (Constants.DEVICE_SUCCESSFULLY_REGISTERED.equals(response)) {
 			return new ModelAndView("redirect:/dashboard");
 		}
 		ModelAndView modelAndView = new ModelAndView();

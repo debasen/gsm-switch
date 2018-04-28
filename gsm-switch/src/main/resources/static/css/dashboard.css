@@ -1,20 +1,18 @@
 @charset "ISO-8859-1";
 
-.navbar{
+.navbar {
 	border-radius: 0px;
 }
 
 div.switch-container {
-	top: 50%;
-	transform: translateY(50%);
 	margin-bottom: 100px;
 	min-width: 150px;
-	box-shadow: 0px 0px 6px #cebbbb;
+	/* 	box-shadow: 0px 0px 6px #cebbbb; */
 	padding: 24px 24px 24px 24px;
-	border-radius: 5px;
+	/* 	border-radius: 5px; */
 }
 
-div.switch-container ul{
+div.switch-container ul {
 	list-style-type: none;
 	margin: 5px;
 	padding: 5px;
@@ -33,17 +31,38 @@ div.device-registration-form {
 	padding: 10px;
 }
 
+.center-panel-right {
+	text-align: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(34%);
+}
+
+.history-collapse-btn {
+	float: right;
+}
+
+.history-panel-heading {
+	cursor: pointer;
+}
+
 #deviceSerialNo {
 	min-width: 230px;
 }
 
-.left-panel{
-	text-align: left;
-}
-
-.center-panel{
-	text-align: center;
-}
-.right-panel{
-	text-align: right;
+@media screen and (max-width: 767px) {
+	div.switch-container {
+		margin-bottom: 20px;
+		/* 		box-shadow: 0px 0px 6px #cebbbb; */
+		/* 		border-radius: 5px; */
+	}
+	.left-panel {
+		margin-bottom: 25px;
+	}
+	.center-panel {
+		
+	}
+	.right-panel {
+		margin-top: 25px;
+	}
 }

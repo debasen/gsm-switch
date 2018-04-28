@@ -1,8 +1,9 @@
 package in.foxlogic.gsmswitch.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -44,11 +45,15 @@ public class UserController {
 		DeviceSessionDetails deviceSessionDetails = new DeviceSessionDetails();
 		ModelAndView modelAndView = new ModelAndView();
 		User user = userService.findUserById(emailId);
-		Device device = user.getDevice();
-		if (device == null) {
+		List<Device> devices = user.getDevices();
+		if (devices.isEmpty()) {
 			modelAndView.addObject("noDevice", true);
 		} else {
-			BeanUtils.copyProperties(device, deviceSessionDetails);
+			if (devices.size() > 1) {
+				modelAndView.addObject("devices", devices);
+			}
+			Device defaultDevice = user.getDefaultDevice();
+			BeanUtils.copyProperties(defaultDevice, deviceSessionDetails);
 			deviceSessionDetails.setUserEmailId(emailId);
 			modelAndView.addObject("deviceSessionDetails", deviceSessionDetails);
 			modelAndView.addObject("relayColor", RelayUtil.getColorValue(deviceSessionDetails));

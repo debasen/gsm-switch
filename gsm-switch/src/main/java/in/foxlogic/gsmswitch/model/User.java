@@ -1,17 +1,23 @@
 package in.foxlogic.gsmswitch.model;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "USER_DETAIL", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_NAME", "EMAIL_ID" }))
-public class User {
+public class User implements Serializable {
 
+	private static final long serialVersionUID = -7169482524957358602L;
 	@Id
 	@Column(name = "EMAIL_ID")
 	private String emailId;
@@ -27,8 +33,11 @@ public class User {
 	private boolean active;
 	@Column(name = "ROLE")
 	private String role;
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Device device;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Device> devices;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "DEFAULT_DEVICE", referencedColumnName = "SERIAL_NUMBER")
+	private Device defaultDevice;
 
 	public String getEmailId() {
 		return emailId;
@@ -86,12 +95,20 @@ public class User {
 		this.role = role;
 	}
 
-	public Device getDevice() {
-		return device;
+	public List<Device> getDevices() {
+		return devices;
 	}
 
-	public void setDevice(Device device) {
-		this.device = device;
+	public void setDevices(List<Device> devices) {
+		this.devices = devices;
+	}
+
+	public Device getDefaultDevice() {
+		return defaultDevice;
+	}
+
+	public void setDefaultDevice(Device defaultDevice) {
+		this.defaultDevice = defaultDevice;
 	}
 
 }

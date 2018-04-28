@@ -43,36 +43,113 @@
 		</div>
 		<div th:if="!${noDevice}" class="container switch-container">
 			<div class="row">
-				<div class="col-xs-4 left-panel">
-					<h4>Device Details</h4>
-					<ul>
-						<li>Model: Tesla</li>
-						<li>Model Number: T-12321</li>
-						<li>Serial Number: 12321312</li>
-					</ul>
+				<div class="col-md-3 left-panel">
+					<div class="panel panel-default">
+						<div class="panel-heading">Device Details</div>
+						<div class="panel-body">
+							<p
+								th:text="'Device Name: '+ ${session.deviceSessionDetails.deviceName}"></p>
+							<p
+								th:text="'Model Number: '+ ${session.deviceSessionDetails.modelNumber}"></p>
+							<p
+								th:text="'Serial Number: '+ ${session.deviceSessionDetails.serialNumber}"></p>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-4 center-panel">
-					<input th:if="${session.deviceSessionDetails.relay}"
-						id="power-btn" type="checkbox" checked="checked"
-						data-toggle="toggle"/> <input
-						th:if="!${session.deviceSessionDetails.relay}" id="power-btn"
-						type="checkbox" data-toggle="toggle" />
+				<div class="col-md-6 center-panel">
+					<div class="panel panel-default">
+						<div class="panel-heading">Device Status</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-xs-6 center-panel-left">
+									<p>Network: Connected</p>
+									<p>Last Ping: 11:06 PM</p>
+									<p>Status: On</p>
+								</div>
+								<div class="col-xs-6 center-panel-right">
+									<input th:if="${session.deviceSessionDetails.relay}"
+										id="power-btn" type="checkbox" checked="checked"
+										data-toggle="toggle" /> <input
+										th:if="!${session.deviceSessionDetails.relay}" id="power-btn"
+										type="checkbox" data-toggle="toggle" />
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-4  right-panel">
-					<h4>Sensor Details</h4>
-					<ul>
-						<li>10000000021321: KTPM</li>
-						<li>21321312: YO</li>
-						<li>917689165: SOME</li>
-					</ul>
+				<div class="col-md-3  right-panel">
+					<div class="panel panel-default">
+						<div class="panel-heading">Sensor Details</div>
+						<div class="panel-body">
+							<p>10000000021321: KTPM</p>
+							<p>21321312: YO</p>
+							<p>917689165: SOME</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div></div>
+
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading history-panel-heading">
+						<h4 class="panel-title">
+							<a href="#historyPanel">Status History</a> <span
+								class="history-collapse-btn glyphicon glyphicon-plus"></span>
+						</h4>
+
+					</div>
+					<div class="panel-body history-panel-body">
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Time</th>
+										<th>Relay Status</th>
+										<th>Current</th>
+										<th>AC Voltage</th>
+										<th>DC Voltage</th>
+										<th>Frequency</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>11:30:21 PM</td>
+										<td>On</td>
+										<td>1.2 A</td>
+										<td>240 V</td>
+										<td>50 V</td>
+										<td>50 Hz</td>
+									</tr>
+									<tr>
+										<td>11:24:54 PM</td>
+										<td>On</td>
+										<td>1.2 A</td>
+										<td>240 V</td>
+										<td>50 V</td>
+										<td>50 Hz</td>
+									</tr>
+									<tr>
+										<td>10:30:21 PM</td>
+										<td>On</td>
+										<td>1.2 A</td>
+										<td>240 V</td>
+										<td>50 V</td>
+										<td>50 Hz</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 
+			<span id="relay-color-tag" style="display: none"
+				th:text="${relayColor}"></span> <span id="relay-status-tag"
+				style="display: none"
+				th:text="${session.deviceSessionDetails.relay}"></span>
 		</div>
 	</div>
-	<span id="relay-color-tag" style="display: none"
-		th:text="${relayColor}"></span>
-	<span id="relay-status-tag" style="display: none"
-		th:text="${session.deviceSessionDetails.relay}"></span>
+
 </body>
 </html>

@@ -1,5 +1,11 @@
 package in.foxlogic.gsmswitch.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +21,11 @@ import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
 import in.foxlogic.gsmswitch.dto.DeviceStatusRequestDto;
 import in.foxlogic.gsmswitch.dto.ServerRelayDetailsRequestDto;
 import in.foxlogic.gsmswitch.model.Device;
+import in.foxlogic.gsmswitch.model.Sensor;
+import in.foxlogic.gsmswitch.model.StatusHistory;
 import in.foxlogic.gsmswitch.model.User;
+import in.foxlogic.gsmswitch.util.Constants;
 import in.foxlogic.gsmswitch.util.RelayUtil;
-import in.foxlogic.gsmswitch.util.StringConstants;
 
 @Service
 public class DeviceService {
@@ -31,12 +39,26 @@ public class DeviceService {
 	@Autowired
 	UserService userService;
 
-	public Device getDeviceOfUser(String userName) {
+	@Autowired
+	List<Integer> sensorAddressList;
+
+	@Autowired
+	Map<Integer, String> sensorMap;
+
+	public Device getDefaultDeviceOfUser(String userName) {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
 			throw new UsernameNotFoundException("No user exists with User Name: " + userName);
 		}
-		return user.getDevice();
+		return user.getDefaultDevice();
+	}
+
+	public List<Device> getDevicesOfUser(String userName) {
+		User user = userRepository.findByUserName(userName);
+		if (user == null) {
+			throw new UsernameNotFoundException("No user exists with User Name: " + userName);
+		}
+		return user.getDevices();
 	}
 
 	public boolean operateSwitch(DeviceSessionDetails deviceSessionDetails, boolean relayState) {
@@ -53,19 +75,20 @@ public class DeviceService {
 		try {
 			deviceSerialNo = Long.parseLong(deviceSerialNoString);
 		} catch (NumberFormatException e) {
-			return StringConstants.INVALID_SERIAL_NO; // If a non numeric serial number is received from user
+			return Constants.INVALID_SERIAL_NO; // If a non numeric serial number is received from user
 		}
 		Device device = deviceRepository.findBySerialNumber(deviceSerialNo);
 		if (device == null) {
-			return StringConstants.INVALID_SERIAL_NO;
+			return Constants.INVALID_SERIAL_NO;
 		} else if (device.getUser() != null) {
-			return StringConstants.DEVICE_ALREADY_REGISTERED;
+			return Constants.DEVICE_ALREADY_REGISTERED;
 		} else {
 			User user = userRepository.findOne(emailId);
 			device.setUser(user);
 			userService.setSecurityKey(device);
+			device.getUser().setDefaultDevice(device);
 			deviceRepository.save(device);
-			return StringConstants.DEVICE_SUCCESSFULLY_REGISTERED;
+			return Constants.DEVICE_SUCCESSFULLY_REGISTERED;
 		}
 	}
 
@@ -77,7 +100,7 @@ public class DeviceService {
 		Device device = deviceRepository.findBySerialNumber(serialNumber);
 		authenticateDevice(serialNumber, securityKey, device);
 		String relayStatus = device.isRelay() ? "On" : "Off";
-		int registerAddress = device.getSensorList().get(iterationIndex).getAddress();
+		int registerAddress = sensorAddressList.get(iterationIndex);
 		String response = "<" + relayStatus + "," + registerAddress + ">";
 		return response;
 	}
@@ -90,6 +113,34 @@ public class DeviceService {
 		authenticateDevice(serialNumber, securityKey, device);
 		device.setDeviceRelay(deviceStatusRequestDto.isRly());
 		device.setDeviceFeedbackRelay(deviceStatusRequestDto.isFrly());
+		device.setLastConnected(LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE)).toString());
+		String sensorType = sensorMap.get(sensorAddressList.get(deviceStatusRequestDto.getlIndx()));
+		String sensorValue = RelayUtil.convertSensorRawData(sensorType, deviceStatusRequestDto.getsVlu());
+		Sensor sensor = device.getSensors() == null ? new Sensor() : device.getSensors();
+		switch (sensorType) {
+		case Constants.OPERATING_FREQUENCY:
+			sensor.setOperatingFrequency(sensorValue);
+			break;
+		case Constants.OPERATING_CURRENT:
+			sensor.setOperatingCurrent(sensorValue);
+			break;
+		case Constants.DC_VOLTAGE:
+			sensor.setDcVoltage(sensorValue);
+			break;
+		case Constants.AC_VOLTAGE:
+			sensor.setAcVoltage(sensorValue);
+			break;
+		case Constants.IGBT_TEMPERATURE:
+			sensor.setIgbtTempereture(sensorValue);
+			break;
+		}
+		device.setSensors(sensor);
+		// Last iteration
+		if (deviceStatusRequestDto.getlIndx() == sensorAddressList.size() - 1) {
+			StatusHistory statusHistory = new StatusHistory();
+			BeanUtils.copyProperties(device.getSensors(), statusHistory);
+			device.getStatusHistory().add(statusHistory);
+		}
 		deviceRepository.save(device);
 		return "SAVED";
 	}
@@ -115,6 +166,14 @@ public class DeviceService {
 		Long deviceId = deviceSessionDetails.getDeviceId();
 		Device device = deviceRepository.getOne(deviceId);
 		BeanUtils.copyProperties(device, deviceSessionDetails);
+
+		if (device.getLastConnected() != null) {
+			LocalDateTime lastConnected = LocalDateTime.parse(device.getLastConnected());
+			deviceSessionDetails.setLastConnectedDate(lastConnected.toLocalDate().toString());
+			deviceSessionDetails.setLastConnectedTime(lastConnected.toLocalTime().toString());
+			LocalDateTime now = LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE));
+			deviceSessionDetails.setNotReachable(lastConnected.until(now, ChronoUnit.MINUTES) > 15);
+		}
 		String relayColor = RelayUtil.getColorValue(deviceSessionDetails);
 		deviceSessionDetails.setRelayColor(relayColor);
 	}

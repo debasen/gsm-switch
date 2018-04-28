@@ -12,6 +12,10 @@ public class DeviceStatusRequestDto {
 	private boolean rly;
 	@NotNull
 	private boolean frly;
+	@NotNull
+	private int lIndx;
+	@NotNull
+	private int sVlu;
 
 	public Long getsNo() {
 		return sNo;
@@ -43,6 +47,22 @@ public class DeviceStatusRequestDto {
 
 	public void setFrly(boolean frly) {
 		this.frly = frly;
+	}
+
+	public int getlIndx() {
+		return lIndx;
+	}
+
+	public void setlIndx(int lIndx) {
+		this.lIndx = lIndx;
+	}
+
+	public int getsVlu() {
+		return sVlu;
+	}
+
+	public void setsVlu(int sVlu) {
+		this.sVlu = sVlu;
 	}
 
 }

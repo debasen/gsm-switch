@@ -12,17 +12,39 @@ public class RelayUtil {
 	 */
 	public static String getColorValue(DeviceSessionDetails deviceSessionDetails) {
 		if (deviceSessionDetails.isDeviceRelay() != deviceSessionDetails.isDeviceFeedbackRelay()) {
-			return StringConstants.BOOTSTRAP_COLOR_DANGER;
+			return Constants.BOOTSTRAP_COLOR_DANGER;
 		} else {
 			if ((deviceSessionDetails.isRelay() == deviceSessionDetails.isDeviceRelay())
 					&& deviceSessionDetails.isRelay() == true) {
-				return StringConstants.BOOTSTRAP_COLOR_SUCCESS;
+				return Constants.BOOTSTRAP_COLOR_SUCCESS;
 			} else if ((deviceSessionDetails.isRelay() == deviceSessionDetails.isDeviceRelay())
 					&& deviceSessionDetails.isRelay() == false) {
-				return StringConstants.BOOTSTRAP_COLOR_DEFAULT;
+				return Constants.BOOTSTRAP_COLOR_DEFAULT;
 			} else {
-				return StringConstants.BOOTSTRAP_COLOR_INFO;
+				return Constants.BOOTSTRAP_COLOR_INFO;
 			}
 		}
+	}
+
+	public static String convertSensorRawData(String sensorType, int value) {
+		String transformedValue = "";
+		switch (sensorType) {
+		case Constants.OPERATING_FREQUENCY:
+			transformedValue = String.valueOf(value);
+			break;
+		case Constants.OPERATING_CURRENT:
+			transformedValue = String.valueOf(value);
+			break;
+		case Constants.DC_VOLTAGE:
+			transformedValue = String.valueOf(value);
+			break;
+		case Constants.AC_VOLTAGE:
+			transformedValue = String.valueOf(value);
+			break;
+		case Constants.IGBT_TEMPERATURE:
+			transformedValue = String.valueOf(value);
+			break;
+		}
+		return transformedValue;
 	}
 }

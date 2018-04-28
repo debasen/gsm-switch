@@ -1,10 +1,18 @@
 package in.foxlogic.gsmswitch.model;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Embeddable
-public class Sensor {
+@Entity
+@Table(name = "STATUS_HISTORY")
+public class StatusHistory {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	@Column(name = "OPERATING_FREQUENCY")
 	private String operatingFrequency;
 	@Column(name = "OPERATING_CURRENT")
@@ -15,6 +23,16 @@ public class Sensor {
 	private String acVoltage;
 	@Column(name = "IGBT_TEMPERATURE")
 	private String igbtTempereture;
+	@Column(name = "TIME")
+	private String time;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getOperatingFrequency() {
 		return operatingFrequency;
@@ -54,6 +72,14 @@ public class Sensor {
 
 	public void setIgbtTempereture(String igbtTempereture) {
 		this.igbtTempereture = igbtTempereture;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 }

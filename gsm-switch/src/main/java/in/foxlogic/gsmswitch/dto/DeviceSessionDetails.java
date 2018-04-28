@@ -15,6 +15,9 @@ public class DeviceSessionDetails {
 	private boolean deviceFeedbackRelay;
 	private String userEmailId;
 	private String relayColor;
+	private String lastConnectedDate;
+	private String lastConnectedTime;
+	private boolean isNotReachable;
 
 	public Long getDeviceId() {
 		return deviceId;
@@ -86,6 +89,30 @@ public class DeviceSessionDetails {
 
 	public void setRelayColor(String relayColor) {
 		this.relayColor = relayColor;
+	}
+
+	public String getLastConnectedDate() {
+		return lastConnectedDate;
+	}
+
+	public void setLastConnectedDate(String lastConnectedDate) {
+		this.lastConnectedDate = lastConnectedDate;
+	}
+
+	public String getLastConnectedTime() {
+		return lastConnectedTime;
+	}
+
+	public void setLastConnectedTime(String lastConnectedTime) {
+		this.lastConnectedTime = lastConnectedTime;
+	}
+
+	public boolean isNotReachable() {
+		return isNotReachable;
+	}
+
+	public void setNotReachable(boolean isNotReachable) {
+		this.isNotReachable = isNotReachable;
 	}
 
 }

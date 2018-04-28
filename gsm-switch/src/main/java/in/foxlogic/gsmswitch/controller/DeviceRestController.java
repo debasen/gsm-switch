@@ -32,8 +32,10 @@ public class DeviceRestController {
 		relayOperationResponse.setButtonColor(responseColor);
 		relayOperationResponse.setRelayStatus(deviceSessionDetails.isRelay());
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(700);
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return relayOperationResponse;
 	}
