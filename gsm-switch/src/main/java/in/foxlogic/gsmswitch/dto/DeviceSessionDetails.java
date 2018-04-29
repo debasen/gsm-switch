@@ -1,7 +1,11 @@
 package in.foxlogic.gsmswitch.dto;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import in.foxlogic.gsmswitch.model.StatusHistory;
 
 @Component
 @Scope("session")
@@ -18,6 +22,7 @@ public class DeviceSessionDetails {
 	private String lastConnectedDate;
 	private String lastConnectedTime;
 	private boolean isNotReachable;
+	private List<StatusHistory> statusHistory;
 
 	public Long getDeviceId() {
 		return deviceId;
@@ -113,6 +118,14 @@ public class DeviceSessionDetails {
 
 	public void setNotReachable(boolean isNotReachable) {
 		this.isNotReachable = isNotReachable;
+	}
+
+	public List<StatusHistory> getStatusHistory() {
+		return statusHistory;
+	}
+
+	public void setStatusHistory(List<StatusHistory> statusHistory) {
+		this.statusHistory = statusHistory;
 	}
 
 }

@@ -131,7 +131,7 @@ public class DeviceService {
 			sensor.setAcVoltage(sensorValue);
 			break;
 		case Constants.IGBT_TEMPERATURE:
-			sensor.setIgbtTempereture(sensorValue);
+			sensor.setIgbtTemperature(sensorValue);
 			break;
 		}
 		device.setSensors(sensor);
@@ -139,6 +139,7 @@ public class DeviceService {
 		if (deviceStatusRequestDto.getlIndx() == sensorAddressList.size() - 1) {
 			StatusHistory statusHistory = new StatusHistory();
 			BeanUtils.copyProperties(device.getSensors(), statusHistory);
+			statusHistory.setTime(LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE)).toString());
 			device.getStatusHistory().add(statusHistory);
 		}
 		deviceRepository.save(device);

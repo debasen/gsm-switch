@@ -22,7 +22,7 @@ public class StatusHistory {
 	@Column(name = "AC_VOLTAGE")
 	private String acVoltage;
 	@Column(name = "IGBT_TEMPERATURE")
-	private String igbtTempereture;
+	private String igbtTemperature;
 	@Column(name = "TIME")
 	private String time;
 
@@ -66,12 +66,12 @@ public class StatusHistory {
 		this.acVoltage = acVoltage;
 	}
 
-	public String getIgbtTempereture() {
-		return igbtTempereture;
+	public String getIgbtTemperature() {
+		return igbtTemperature;
 	}
 
-	public void setIgbtTempereture(String igbtTempereture) {
-		this.igbtTempereture = igbtTempereture;
+	public void setIgbtTemperature(String igbtTemperature) {
+		this.igbtTemperature = igbtTemperature;
 	}
 
 	public String getTime() {

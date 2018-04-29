@@ -14,7 +14,7 @@ public class Sensor {
 	@Column(name = "AC_VOLTAGE")
 	private String acVoltage;
 	@Column(name = "IGBT_TEMPERATURE")
-	private String igbtTempereture;
+	private String igbtTemperature;
 
 	public String getOperatingFrequency() {
 		return operatingFrequency;
@@ -48,12 +48,12 @@ public class Sensor {
 		this.acVoltage = acVoltage;
 	}
 
-	public String getIgbtTempereture() {
-		return igbtTempereture;
+	public String getIgbtTemperature() {
+		return igbtTemperature;
 	}
 
-	public void setIgbtTempereture(String igbtTempereture) {
-		this.igbtTempereture = igbtTempereture;
+	public void setIgbtTemperature(String igbtTemperature) {
+		this.igbtTemperature = igbtTemperature;
 	}
 
 }

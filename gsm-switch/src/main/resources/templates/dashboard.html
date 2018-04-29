@@ -100,42 +100,29 @@
 
 					</div>
 					<div class="panel-body history-panel-body">
-						<div class="table-responsive">
+					<div th:if="${#lists.isEmpty(session.deviceSessionDetails.statusHistory)}">
+					<p>No History Available.</p>
+					</div>
+						<div th:if="${not #lists.isEmpty(session.deviceSessionDetails.statusHistory)}" class="table-responsive">
 							<table class="table table-striped">
 								<thead>
 									<tr>
 										<th>Time</th>
-										<th>Relay Status</th>
-										<th>Current</th>
+										<th>Operating Frequency</th>
+										<th>Operating Current</th>
 										<th>AC Voltage</th>
 										<th>DC Voltage</th>
-										<th>Frequency</th>
+										<th>IGBT Temperature</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>11:30:21 PM</td>
-										<td>On</td>
-										<td>1.2 A</td>
-										<td>240 V</td>
-										<td>50 V</td>
-										<td>50 Hz</td>
-									</tr>
-									<tr>
-										<td>11:24:54 PM</td>
-										<td>On</td>
-										<td>1.2 A</td>
-										<td>240 V</td>
-										<td>50 V</td>
-										<td>50 Hz</td>
-									</tr>
-									<tr>
-										<td>10:30:21 PM</td>
-										<td>On</td>
-										<td>1.2 A</td>
-										<td>240 V</td>
-										<td>50 V</td>
-										<td>50 Hz</td>
+									<tr th:each="item : ${session.deviceSessionDetails.statusHistory}">
+										<td th:text="${item.time}"></td>
+										<td th:text="${item.operatingFrequency}">On</td>
+										<td th:text="${item.operatingCurrent}">1.2 A</td>
+										<td th:text="${item.acVoltage}">240 V</td>
+										<td th:text="${item.dcVoltage}">50 V</td>
+										<td th:text="${item.igbtTemperature}">50 Hz</td>
 									</tr>
 								</tbody>
 							</table>
