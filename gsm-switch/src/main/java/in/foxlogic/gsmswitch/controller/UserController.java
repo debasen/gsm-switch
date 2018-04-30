@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
+import in.foxlogic.gsmswitch.dto.PollServerResponse;
 import in.foxlogic.gsmswitch.dto.UserRegistrationDto;
 import in.foxlogic.gsmswitch.dto.UserSessionDetails;
 import in.foxlogic.gsmswitch.model.Device;
 import in.foxlogic.gsmswitch.model.User;
+import in.foxlogic.gsmswitch.service.DeviceService;
 import in.foxlogic.gsmswitch.service.UserService;
 import in.foxlogic.gsmswitch.util.RelayUtil;
 
@@ -30,6 +32,8 @@ import in.foxlogic.gsmswitch.util.RelayUtil;
 public class UserController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	DeviceService deviceService;
 
 	@GetMapping({ "/welcome", "/" })
 	public String displayWelcomePage() {
@@ -57,6 +61,9 @@ public class UserController {
 			deviceSessionDetails.setUserEmailId(emailId);
 			modelAndView.addObject("deviceSessionDetails", deviceSessionDetails);
 			modelAndView.addObject("relayColor", RelayUtil.getColorValue(deviceSessionDetails));
+			PollServerResponse pollServerResponse = deviceService.pollServer(deviceSessionDetails);
+			RelayUtil.convertHistoryFromDbToUi(deviceSessionDetails, pollServerResponse);
+			modelAndView.addObject("pollServerResponse", pollServerResponse);
 		}
 		BeanUtils.copyProperties(user, userSessionDetails);
 		modelAndView.addObject("userSessionDetails", userSessionDetails);

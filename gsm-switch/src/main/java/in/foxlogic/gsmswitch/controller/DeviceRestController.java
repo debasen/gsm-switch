@@ -12,6 +12,7 @@ import in.foxlogic.gsmswitch.customexception.AuthenticationException;
 import in.foxlogic.gsmswitch.customexception.DeviceNotRegisteredException;
 import in.foxlogic.gsmswitch.customexception.InvalidSerialNumberException;
 import in.foxlogic.gsmswitch.dto.DeviceStatusRequestDto;
+import in.foxlogic.gsmswitch.dto.PollServerResponse;
 import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
 import in.foxlogic.gsmswitch.dto.RelayOperationResponse;
 import in.foxlogic.gsmswitch.dto.ServerRelayDetailsRequestDto;
@@ -55,10 +56,9 @@ public class DeviceRestController {
 	}
 
 	@GetMapping("/poll-server")
-	public DeviceSessionDetails pollServer(
+	public PollServerResponse pollServer(
 			@SessionAttribute("deviceSessionDetails") DeviceSessionDetails deviceSessionDetails) {
-		deviceService.fetchDeviceStatus(deviceSessionDetails);
-		return deviceSessionDetails;
+		return deviceService.pollServer(deviceSessionDetails);
 
 	}
 

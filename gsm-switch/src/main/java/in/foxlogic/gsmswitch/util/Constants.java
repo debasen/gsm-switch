@@ -22,4 +22,13 @@ public class Constants {
 	public static final String AC_VOLTAGE = "AC_VOLTAGE";
 	public static final String IGBT_TEMPERATURE = "IGBT_TEMPERATURE";
 	public static final String CALCUTTA_TIME_ZONE = "Asia/Calcutta";
+	public static final String NETWORK_NOT_REACHABLE = "Not Reachable";
+	public static final String NETWORK_CONNECTED = "Connected";
+	public static final String NO_HISTORY_AVAILABLE_MESSAGE = "No Data Available";
+	public static final String DEVICE_RELAY_ON_MESSAGE = "On";
+	public static final String DEVICE_RELAY_OFF_MESSAGE = "Off";
+	public static final String UI_TIME_FORMAT = "hh:mm:ss a";
+	public static final String UI_STATUS_HISTORY_FORMAT = "hh:mm a";
+	public static final String UI_DATE_FORMAT = "dd-MMM-yy";
+	public static final String NOT_KNOWN = "Not Known";
 }

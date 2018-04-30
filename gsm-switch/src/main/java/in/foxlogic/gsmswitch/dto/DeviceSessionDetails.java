@@ -21,7 +21,7 @@ public class DeviceSessionDetails {
 	private String relayColor;
 	private String lastConnectedDate;
 	private String lastConnectedTime;
-	private boolean isNotReachable;
+	private boolean notReachable;
 	private List<StatusHistory> statusHistory;
 
 	public Long getDeviceId() {
@@ -112,20 +112,20 @@ public class DeviceSessionDetails {
 		this.lastConnectedTime = lastConnectedTime;
 	}
 
-	public boolean isNotReachable() {
-		return isNotReachable;
-	}
-
-	public void setNotReachable(boolean isNotReachable) {
-		this.isNotReachable = isNotReachable;
-	}
-
 	public List<StatusHistory> getStatusHistory() {
 		return statusHistory;
 	}
 
 	public void setStatusHistory(List<StatusHistory> statusHistory) {
 		this.statusHistory = statusHistory;
+	}
+
+	public boolean isNotReachable() {
+		return notReachable;
+	}
+
+	public void setNotReachable(boolean notReachable) {
+		this.notReachable = notReachable;
 	}
 
 }

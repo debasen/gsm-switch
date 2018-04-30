@@ -36,8 +36,10 @@ public class Device implements Serializable {
 	private boolean deviceRelay;
 	@Column(name = "DEVICE_FEEDBACK_RELAY")
 	private boolean deviceFeedbackRelay;
-	@Column(name = "LAST_CONNECTED")
-	private String lastConnected;
+	@Column(name = "LAST_CONNECTED_DATE")
+	private String lastConnectedDate;
+	@Column(name = "LAST_CONNECTED_TIME")
+	private String lastConnectedTime;
 	@Column(name = "SECURITY_KEY")
 	private String securityKey;
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -105,12 +107,20 @@ public class Device implements Serializable {
 		this.deviceFeedbackRelay = deviceFeedbackRelay;
 	}
 
-	public String getLastConnected() {
-		return lastConnected;
+	public String getLastConnectedDate() {
+		return lastConnectedDate;
 	}
 
-	public void setLastConnected(String lastConnected) {
-		this.lastConnected = lastConnected;
+	public void setLastConnectedDate(String lastConnectedDate) {
+		this.lastConnectedDate = lastConnectedDate;
+	}
+
+	public String getLastConnectedTime() {
+		return lastConnectedTime;
+	}
+
+	public void setLastConnectedTime(String lastConnectedTime) {
+		this.lastConnectedTime = lastConnectedTime;
 	}
 
 	public String getSecurityKey() {

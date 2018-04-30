@@ -1,7 +1,10 @@
 package in.foxlogic.gsmswitch.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,8 @@ import in.foxlogic.gsmswitch.dao.DeviceRepository;
 import in.foxlogic.gsmswitch.dao.UserRepository;
 import in.foxlogic.gsmswitch.dto.DeviceSessionDetails;
 import in.foxlogic.gsmswitch.dto.DeviceStatusRequestDto;
+import in.foxlogic.gsmswitch.dto.PollServerResponse;
+import in.foxlogic.gsmswitch.dto.SensorDataInUIDto;
 import in.foxlogic.gsmswitch.dto.ServerRelayDetailsRequestDto;
 import in.foxlogic.gsmswitch.model.Device;
 import in.foxlogic.gsmswitch.model.Sensor;
@@ -113,9 +118,11 @@ public class DeviceService {
 		authenticateDevice(serialNumber, securityKey, device);
 		device.setDeviceRelay(deviceStatusRequestDto.isRly());
 		device.setDeviceFeedbackRelay(deviceStatusRequestDto.isFrly());
-		device.setLastConnected(LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE)).toString());
+		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE));
+		device.setLastConnectedDate(currentDateTime.toLocalDate().toString());
+		device.setLastConnectedTime(currentDateTime.toLocalTime().toString());
 		String sensorType = sensorMap.get(sensorAddressList.get(deviceStatusRequestDto.getlIndx()));
-		String sensorValue = RelayUtil.convertSensorRawData(sensorType, deviceStatusRequestDto.getsVlu());
+		String sensorValue = RelayUtil.sensorRawToDatabase(sensorType, deviceStatusRequestDto.getsVlu());
 		Sensor sensor = device.getSensors() == null ? new Sensor() : device.getSensors();
 		switch (sensorType) {
 		case Constants.OPERATING_FREQUENCY:
@@ -139,7 +146,8 @@ public class DeviceService {
 		if (deviceStatusRequestDto.getlIndx() == sensorAddressList.size() - 1) {
 			StatusHistory statusHistory = new StatusHistory();
 			BeanUtils.copyProperties(device.getSensors(), statusHistory);
-			statusHistory.setTime(LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE)).toString());
+			statusHistory.setDate(currentDateTime.toLocalDate().toString());
+			statusHistory.setTime(currentDateTime.toLocalTime().toString());
 			device.getStatusHistory().add(statusHistory);
 		}
 		deviceRepository.save(device);
@@ -163,20 +171,47 @@ public class DeviceService {
 		}
 	}
 
-	public void fetchDeviceStatus(DeviceSessionDetails deviceSessionDetails) {
+	public PollServerResponse pollServer(DeviceSessionDetails deviceSessionDetails) {
+		// Update Device Session Informations
 		Long deviceId = deviceSessionDetails.getDeviceId();
 		Device device = deviceRepository.getOne(deviceId);
 		BeanUtils.copyProperties(device, deviceSessionDetails);
-
-		if (device.getLastConnected() != null) {
-			LocalDateTime lastConnected = LocalDateTime.parse(device.getLastConnected());
-			deviceSessionDetails.setLastConnectedDate(lastConnected.toLocalDate().toString());
-			deviceSessionDetails.setLastConnectedTime(lastConnected.toLocalTime().toString());
+		if (deviceSessionDetails.getLastConnectedDate() == null) {
+			deviceSessionDetails.setNotReachable(true);
+		} else {
 			LocalDateTime now = LocalDateTime.now(ZoneId.of(Constants.CALCUTTA_TIME_ZONE));
-			deviceSessionDetails.setNotReachable(lastConnected.until(now, ChronoUnit.MINUTES) > 15);
+			LocalDateTime lastConnected = LocalDateTime.parse(
+					deviceSessionDetails.getLastConnectedDate() + "T" + deviceSessionDetails.getLastConnectedTime());
+			deviceSessionDetails.setNotReachable(lastConnected.until(now, ChronoUnit.MINUTES) > 1);
 		}
 		String relayColor = RelayUtil.getColorValue(deviceSessionDetails);
 		deviceSessionDetails.setRelayColor(relayColor);
+		PollServerResponse pollServerResponse = new PollServerResponse();
+		BeanUtils.copyProperties(deviceSessionDetails, pollServerResponse);
+		if (!deviceSessionDetails.getStatusHistory().isEmpty()) {
+			SensorDataInUIDto sensorData = new SensorDataInUIDto();
+			RelayUtil.databaseRawToUI(sensorData,
+					deviceSessionDetails.getStatusHistory().get(deviceSessionDetails.getStatusHistory().size() - 1));
+			pollServerResponse.setSensorData(sensorData);
+		} else {
+			pollServerResponse.setEmptyHistoryMessage((Constants.NO_HISTORY_AVAILABLE_MESSAGE));
+			pollServerResponse.setEmptyHistory(true);
+		}
+		pollServerResponse.setNetworkStatus(
+				deviceSessionDetails.isNotReachable() ? Constants.NETWORK_NOT_REACHABLE : Constants.NETWORK_CONNECTED);
+		if (deviceSessionDetails.isNotReachable()) {
+
+		}
+		pollServerResponse.setDeviceRelayString(deviceSessionDetails.isNotReachable() ? Constants.NOT_KNOWN
+				: deviceSessionDetails.isDeviceRelay() ? Constants.DEVICE_RELAY_ON_MESSAGE
+						: Constants.DEVICE_RELAY_OFF_MESSAGE);
+		pollServerResponse.setLastConnectedTime(deviceSessionDetails.getLastConnectedTime() == null ? null
+				: LocalTime.parse(deviceSessionDetails.getLastConnectedTime())
+						.format(DateTimeFormatter.ofPattern(Constants.UI_TIME_FORMAT)));
+		pollServerResponse.setLastConnectedDate(deviceSessionDetails.getLastConnectedTime() == null ? null
+				: LocalDate.parse(deviceSessionDetails.getLastConnectedDate())
+						.format(DateTimeFormatter.ofPattern(Constants.UI_DATE_FORMAT)));
+		return pollServerResponse;
 	}
 
 }

@@ -23,6 +23,8 @@ public class StatusHistory {
 	private String acVoltage;
 	@Column(name = "IGBT_TEMPERATURE")
 	private String igbtTemperature;
+	@Column(name = "DATE")
+	private String date;
 	@Column(name = "TIME")
 	private String time;
 
@@ -80,6 +82,14 @@ public class StatusHistory {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 }

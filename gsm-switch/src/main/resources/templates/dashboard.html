@@ -62,9 +62,21 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-xs-6 center-panel-left">
-									<p>Network: Connected</p>
-									<p>Last Ping: 11:06 PM</p>
-									<p>Status: On</p>
+									<p id="network-status"
+										th:if="${session.deviceSessionDetails.notReachable}">Network:
+										Not Reachable</p>
+									<p id="network-status"
+										th:if="!${session.deviceSessionDetails.notReachable}">Network:
+										Connected</p>
+									<p id="last-ping"
+										th:if="${pollServerResponse.lastConnectedTime}!=null"
+										th:text="'Last Ping: '+ ${pollServerResponse.lastConnectedTime}">Last
+										Ping: 11:06 PM</p>
+										<p id="last-ping"
+										th:if="${pollServerResponse.lastConnectedTime}==null">Last
+										Ping: Never</p>
+									<p id="relay-status"
+										th:text="'Status: '+ ${pollServerResponse.deviceRelay}">On</p>
 								</div>
 								<div class="col-xs-6 center-panel-right">
 									<input th:if="${session.deviceSessionDetails.relay}"
@@ -81,10 +93,18 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">Sensor Details</div>
 						<div class="panel-body">
-							<p>10000000021321: KTPM</p>
-							<p>21321312: YO</p>
-							<p>917689165: SOME</p>
+							<div id="sensor-data-div">
+								<p id="operating-frequency-p">10000000021321: KTPM</p>
+								<p id="operating-current-p">21321312: YO</p>
+								<p id="ac-voltage-p">917689165: SOME</p>
+								<p id="dc-voltage-p">917689165: SOME</p>
+								<p id="igbt-temperature-p">917689165: SOME</p>
+							</div>
+							<div id="empty-history-placeholder">
+								<p>No Data available.</p>
+							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -100,13 +120,17 @@
 
 					</div>
 					<div class="panel-body history-panel-body">
-					<div th:if="${#lists.isEmpty(session.deviceSessionDetails.statusHistory)}">
-					<p>No History Available.</p>
-					</div>
-						<div th:if="${not #lists.isEmpty(session.deviceSessionDetails.statusHistory)}" class="table-responsive">
+						<div
+							th:if="${#lists.isEmpty(pollServerResponse.statusHistories)}">
+							<p>No History Available.</p>
+						</div>
+						<div
+							th:if="${not #lists.isEmpty(pollServerResponse.statusHistories)}"
+							class="table-responsive">
 							<table class="table table-striped">
 								<thead>
 									<tr>
+										<th>Date</th>
 										<th>Time</th>
 										<th>Operating Frequency</th>
 										<th>Operating Current</th>
@@ -116,7 +140,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="item : ${session.deviceSessionDetails.statusHistory}">
+									<tr
+										th:each="item : ${pollServerResponse.statusHistories}">
+										<td th:text="${item.date}"></td>
 										<td th:text="${item.time}"></td>
 										<td th:text="${item.operatingFrequency}">On</td>
 										<td th:text="${item.operatingCurrent}">1.2 A</td>
