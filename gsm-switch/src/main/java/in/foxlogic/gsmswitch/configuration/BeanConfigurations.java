@@ -25,6 +25,18 @@ public class BeanConfigurations {
 		sensorAddressList.add(Constants.IGBT_TEMPERATURE_ADDRESS);
 		return sensorAddressList;
 	}
+	
+	@Bean
+	@Scope(scopeName = "singleton")
+	public List<Integer> sensorCrcList() {
+		List<Integer> sensorAddressList = new ArrayList<>();
+		sensorAddressList.add(Constants.OPERATING_FREQUENCY_CRC);
+		sensorAddressList.add(Constants.OPERATING_CURRENT_CRC);
+		sensorAddressList.add(Constants.DC_VOLTAGE_CRC);
+		sensorAddressList.add(Constants.AC_VOLTAGE_CRC);
+		sensorAddressList.add(Constants.IGBT_TEMPERATURE_CRC);
+		return sensorAddressList;
+	}
 
 	@Bean
 	@Scope(scopeName = "singleton")

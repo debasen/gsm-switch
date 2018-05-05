@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import in.foxlogic.gsmswitch.customexception.AuthenticationException;
+import in.foxlogic.gsmswitch.customexception.DeviceIterationException;
 import in.foxlogic.gsmswitch.customexception.DeviceNotRegisteredException;
 import in.foxlogic.gsmswitch.customexception.InvalidSerialNumberException;
 import in.foxlogic.gsmswitch.dto.DeviceStatusRequestDto;
@@ -43,7 +44,8 @@ public class DeviceRestController {
 
 	@PostMapping("/ftchCmnds")
 	public String sendServerSideRelayDetails(@Valid ServerRelayDetailsRequestDto serverRelayDetailsRequestDto)
-			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException {
+			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException,
+			DeviceIterationException {
 		return deviceService.sendServerSideRelayDetails(serverRelayDetailsRequestDto);
 
 	}

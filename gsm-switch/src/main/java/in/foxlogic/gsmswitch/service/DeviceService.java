@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import in.foxlogic.gsmswitch.customexception.AuthenticationException;
+import in.foxlogic.gsmswitch.customexception.DeviceIterationException;
 import in.foxlogic.gsmswitch.customexception.DeviceNotRegisteredException;
 import in.foxlogic.gsmswitch.customexception.InvalidSerialNumberException;
 import in.foxlogic.gsmswitch.dao.DeviceRepository;
@@ -46,6 +47,9 @@ public class DeviceService {
 
 	@Autowired
 	List<Integer> sensorAddressList;
+
+	@Autowired
+	List<Integer> sensorCrcList;
 
 	@Autowired
 	Map<Integer, String> sensorMap;
@@ -98,15 +102,23 @@ public class DeviceService {
 	}
 
 	public String sendServerSideRelayDetails(ServerRelayDetailsRequestDto serverRelayDetailsRequestDto)
-			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException {
+			throws InvalidSerialNumberException, DeviceNotRegisteredException, AuthenticationException,
+			DeviceIterationException {
 		Long serialNumber = serverRelayDetailsRequestDto.getsNo();
 		String securityKey = serverRelayDetailsRequestDto.getSecKy();
 		int iterationIndex = serverRelayDetailsRequestDto.getlIndx();
 		Device device = deviceRepository.findBySerialNumber(serialNumber);
 		authenticateDevice(serialNumber, securityKey, device);
 		String relayStatus = device.isRelay() ? "On" : "Off";
-		int registerAddress = sensorAddressList.get(iterationIndex);
-		String response = "<" + relayStatus + "," + registerAddress + ">";
+		int registerAddress;
+		int registerCrc;
+		try {
+			registerAddress = sensorAddressList.get(iterationIndex);
+			registerCrc = sensorCrcList.get(iterationIndex);
+		} catch (IndexOutOfBoundsException e) {
+			throw new DeviceIterationException("Invalid Iteration Number: " + iterationIndex);
+		}
+		String response = "<" + relayStatus + "," + registerAddress + "|" + registerCrc + ">";
 		return response;
 	}
 
