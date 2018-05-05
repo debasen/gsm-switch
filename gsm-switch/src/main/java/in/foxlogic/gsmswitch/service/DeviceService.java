@@ -118,7 +118,9 @@ public class DeviceService {
 		} catch (IndexOutOfBoundsException e) {
 			throw new DeviceIterationException("Invalid Iteration Number: " + iterationIndex);
 		}
-		String response = "<" + relayStatus + "," + registerAddress + "|" + registerCrc + ">";
+		String registerAddressStr = StringUtils.leftPad(String.valueOf(registerAddress), 5, "0");
+		String registerCrcStr = StringUtils.leftPad(String.valueOf(registerCrc), 5, "0");
+		String response = "<" + relayStatus + "," + registerAddressStr + "|" + registerCrcStr + ">";
 		return response;
 	}
 
