@@ -18,9 +18,9 @@ public class Constants {
 	public static final int IGBT_TEMPERATURE_ADDRESS = 0x210A;
 	public static final int OPERATING_FREQUENCY_CRC = 0x7E36;
 	public static final int OPERATING_CURRENT_CRC = 0xCFF7;
-	public static final int DC_VOLTAGE_CRC = 0x7634;
-	public static final int AC_VOLTAGE_CRC = 0x27F4;
-	public static final int IGBT_TEMPERATURE_CRC = 0xD7F4;
+	public static final int DC_VOLTAGE_CRC = 0x0FF4;
+	public static final int AC_VOLTAGE_CRC = 0x5E34;
+	public static final int IGBT_TEMPERATURE_CRC = 0xAE34;
 	public static final String OPERATING_FREQUENCY = "OPERATING_FREQUENCY";
 	public static final String OPERATING_CURRENT = "OPERATING_CURRENT";
 	public static final String DC_VOLTAGE = "DC_VOLTAGE";
